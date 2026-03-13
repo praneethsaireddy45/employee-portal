@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>KU — Employee Management Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,400&display=swap" rel="stylesheet"/>
+<style>
+/* ══════════════════════════════════════════
+   KU EMPLOYEE PORTAL — PREMIUM DARK THEME
+══════════════════════════════════════════ */
+:root {
+  --bg:          #080b12;
+  --bg2:         #0d1018;
+  --surface:     #111520;
+  --surface2:    #181d2e;
+  --border:      #1f2840;
+  --accent:      #3d7ef5;
+  --accent2:     #6b4cf5;
+  --accent-glow: rgba(61,126,245,0.15);
+  --gold:        #f0c040;
+  --success:     #2ecc8a;
+  --danger:      #f05577;
+  --warn:        #f0a830;
+  --info:        #38bdf8;
+  --text:        #e2e8f8;
+  --muted:       #6b7a9e;
+  --radius:      14px;
+  --radius-sm:   8px;
+  --radius-xs:   6px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 15px;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+h1,h2,h3,h4,.brand,.stat-value,.page-heading { font-family: 'Syne', sans-serif; }
+
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: var(--bg2); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+
+/* ══ LAYOUT ══ */
+#app-root { display: flex; min-height: 100vh; }
+
+/* ══════════════════════════════════════════
+   LOGIN PAGE
+══════════════════════════════════════════ */
+#login-page {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(ellipse 80% 55% at 15% 15%, rgba(61,126,245,0.13) 0%, transparent 65%),
+    radial-gradient(ellipse 60% 60% at 85% 85%, rgba(107,76,245,0.10) 0%, transparent 65%),
+    var(--bg);
+  padding: 1.5rem;
+}
+
+.login-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  padding: 2.8rem 2.5rem;
+  width: 100%;
+  max-width: 430px;
+  box-shadow: 0 40px 100px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.03);
+  animation: fadeUp 0.5s ease both;
+}
+
+.login-logo-row {
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 2rem;
+}
+.logo-mark {
+  width: 50px; height: 50px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border-radius: 15px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.5rem; color: #fff;
+  box-shadow: 0 8px 28px rgba(61,126,245,0.45);
+  flex-shrink: 0;
+}
+.login-brand { font-size: 1.7rem; font-weight: 800; letter-spacing: -.02em; }
+.login-tagline { font-size: 0.72rem; color: var(--muted); letter-spacing: .1em; text-transform: uppercase; margin-top: 1px; }
+
+.login-heading { font-size: 1.4rem; font-weight: 700; margin-bottom: .3rem; }
+.login-sub { color: var(--muted); font-size: .9rem; margin-bottom: 1.8rem; }
+
+.cred-hint {
+  margin-top: 1.8rem; padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+}
+.cred-label { font-size: .71rem; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; margin-bottom: .7rem; }
+.cred-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.cred-box {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: .6rem .8rem;
+}
+.cred-role { font-size: .75rem; font-weight: 600; color: var(--accent); margin-bottom: 2px; }
+.cred-val { font-size: .72rem; color: var(--muted); font-family: monospace; }
+
+/* ══════════════════════════════════════════
+   SIDEBAR
+══════════════════════════════════════════ */
+#sidebar {
+  width: 248px;
+  min-height: 100vh;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  flex-shrink: 0;
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  z-index: 50;
+  transition: transform .3s ease;
+}
+
+.sb-head {
+  padding: 1.4rem 1.3rem 1rem;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 12px;
+}
+.sb-logo-mark {
+  width: 38px; height: 38px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border-radius: 11px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.15rem; color: #fff;
+  flex-shrink: 0;
+}
+.sb-brand { font-family: 'Syne', sans-serif; font-size: 1.15rem; font-weight: 800; }
+.sb-role-badge {
+  display: inline-block;
+  font-size: .67rem; text-transform: capitalize; letter-spacing: .07em;
+  color: var(--accent); background: var(--accent-glow);
+  border: 1px solid rgba(61,126,245,.3);
+  border-radius: 4px; padding: 1px 7px; margin-top: 2px;
+  font-weight: 600;
+}
+
+.sb-nav { flex: 1; padding: .8rem .65rem; overflow-y: auto; }
+.nav-section { font-size: .67rem; text-transform: uppercase; letter-spacing: .12em; color: var(--muted); padding: .6rem .65rem .3rem; font-weight: 600; margin-top: 4px; }
+.nav-item {
+  display: flex; align-items: center; gap: 9px;
+  padding: .58rem .75rem;
+  border-radius: var(--radius-sm);
+  color: var(--muted);
+  cursor: pointer;
+  font-size: .88rem; font-weight: 500;
+  transition: all .16s;
+  margin-bottom: 1px;
+  user-select: none;
+}
+.nav-item:hover { background: var(--surface2); color: var(--text); }
+.nav-item.active { background: var(--surface2); color: var(--accent); }
+.nav-icon { width: 16px; text-align: center; font-size: .9rem; flex-shrink: 0; }
+
+.sb-foot {
+  padding: .9rem 1rem;
+  border-top: 1px solid var(--border);
+}
+.user-pill {
+  display: flex; align-items: center; gap: 9px;
+  padding: .65rem .8rem;
+  background: var(--surface2); border-radius: var(--radius-sm);
+  margin-bottom: .7rem;
+}
+.u-avatar {
+  width: 30px; height: 30px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  display: flex; align-items: center; justify-content: center;
+  font-size: .8rem; font-weight: 700; color: #fff;
+  flex-shrink: 0;
+}
+.u-name { font-size: .85rem; font-weight: 600; line-height: 1.2; }
+.u-role { font-size: .72rem; color: var(--muted); text-transform: capitalize; }
+.btn-logout {
+  width: 100%; padding: .5rem;
+  background: transparent; border: 1px solid rgba(240,85,119,.35);
+  border-radius: var(--radius-sm);
+  color: var(--danger); font-size: .82rem; cursor: pointer;
+  transition: all .18s; font-family: 'DM Sans', sans-serif;
+}
+.btn-logout:hover { background: rgba(240,85,119,.1); }
+
+/* ══════════════════════════════════════════
+   MAIN AREA
+══════════════════════════════════════════ */
+#main-wrap {
+  margin-left: 248px;
+  flex: 1;
+  display: flex; flex-direction: column;
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+.topbar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 1rem 2rem;
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 40;
+  gap: 1rem; flex-wrap: wrap;
+}
+.topbar-left .page-heading { font-size: 1.15rem; font-weight: 700; }
+.topbar-left .page-sub { font-size: .78rem; color: var(--muted); }
+
+.page-content { padding: 1.8rem 2rem; flex: 1; }
+
+/* ══ FLASH ══ */
+.flash-msg {
+  display: flex; align-items: center; gap: 9px;
+  padding: .7rem 1rem; border-radius: var(--radius-sm);
+  font-size: .88rem; margin-bottom: 1.2rem;
+  border: 1px solid;
+  animation: fadeUp .3s ease both;
+}
+.flash-success { background: rgba(46,204,138,.1); border-color: rgba(46,204,138,.3); color: var(--success); }
+.flash-danger  { background: rgba(240,85,119,.1);  border-color: rgba(240,85,119,.3);  color: var(--danger); }
+.flash-info    { background: rgba(56,189,248,.1);  border-color: rgba(56,189,248,.3);  color: var(--info); }
+.flash-warning { background: rgba(240,168,48,.1);  border-color: rgba(240,168,48,.3);  color: var(--warn); }
+
+/* ══ FORM ══ */
+.form-label { font-size: .72rem; font-weight: 600; color: var(--muted); letter-spacing: .07em; text-transform: uppercase; display: block; margin-bottom: 5px; }
+.form-control, .form-select {
+  width: 100%;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  padding: .62rem .95rem;
+  font-family: 'DM Sans', sans-serif;
+  font-size: .92rem;
+  transition: border-color .2s, box-shadow .2s;
+  appearance: none;
+  -webkit-appearance: none;
+}
+.form-control:focus, .form-select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(61,126,245,.2);
+}
+.form-control::placeholder { color: var(--muted); }
+.form-select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7a9e' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 2rem; }
+.form-select option { background: var(--surface2); }
+
+.form-section-title {
+  font-size: .72rem; text-transform: uppercase; letter-spacing: .1em;
+  color: var(--muted); font-weight: 600;
+  padding-bottom: .6rem; border-bottom: 1px solid var(--border);
+  margin-bottom: 1rem; margin-top: 1.2rem;
+}
+.form-section-title:first-child { margin-top: 0; }
+.form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: .9rem; }
+.form-group { display: flex; flex-direction: column; }
+
+/* ══ BUTTONS ══ */
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: #fff; border: none;
+  border-radius: var(--radius-sm);
+  padding: .65rem 1.3rem;
+  font-family: 'Syne', sans-serif; font-weight: 600; font-size: .9rem;
+  cursor: pointer;
+  transition: opacity .2s, transform .15s, box-shadow .2s;
+  box-shadow: 0 4px 16px rgba(61,126,245,.3);
+}
+.btn-primary:hover { opacity: .9; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(61,126,245,.4); }
+.btn-primary:active { transform: scale(.98); }
+
+.btn-secondary {
+  background: transparent; color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: .6rem 1.2rem;
+  font-family: 'DM Sans', sans-serif; font-size: .88rem; font-weight: 500;
+  cursor: pointer; transition: all .18s;
+}
+.btn-secondary:hover { background: var(--surface2); }
+
+.btn-outline {
+  background: transparent; color: var(--accent);
+  border: 1px solid rgba(61,126,245,.4);
+  border-radius: var(--radius-sm);
+  padding: .5rem 1rem;
+  font-size: .82rem; font-weight: 500;
+  cursor: pointer; transition: all .18s;
+}
+.btn-outline:hover { background: var(--accent-glow); }
+
+.btn-danger-sm {
+  background: transparent; color: var(--danger);
+  border: 1px solid rgba(240,85,119,.35);
+  border-radius: var(--radius-sm);
+  padding: .42rem .85rem;
+  font-size: .78rem; cursor: pointer; transition: all .18s;
+}
+.btn-danger-sm:hover { background: rgba(240,85,119,.12); }
+
+.btn-edit-sm {
+  background: transparent; color: var(--accent);
+  border: 1px solid rgba(61,126,245,.35);
+  border-radius: var(--radius-sm);
+  padding: .42rem .85rem;
+  font-size: .78rem; cursor: pointer; transition: all .18s;
+}
+.btn-edit-sm:hover { background: var(--accent-glow); }
+
+.form-actions { display: flex; gap: .75rem; margin-top: 1.5rem; }
+
+/* ══ CARDS ══ */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.card-head {
+  padding: 1rem 1.4rem;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 1rem; flex-wrap: wrap;
+}
+.card-title { font-size: .95rem; font-weight: 700; }
+.card-muted { font-size: .82rem; color: var(--muted); font-weight: 400; }
+
+.form-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.8rem;
+  max-width: 700px;
+}
+
+/* ══ STAT CARDS ══ */
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px,1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.3rem 1.4rem;
+  position: relative; overflow: hidden;
+  transition: transform .2s, box-shadow .2s;
+}
+.stat-card:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(0,0,0,.35); }
+.stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+.stat-icon { font-size: 1.5rem; margin-bottom: .6rem; }
+.stat-value { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; line-height: 1; margin-bottom: .25rem; }
+.stat-label { font-size: .73rem; color: var(--muted); text-transform: uppercase; letter-spacing: .07em; }
+
+/* ══ TABLE ══ */
+.table-wrap { overflow-x: auto; }
+.ku-table { width: 100%; border-collapse: collapse; }
+.ku-table thead th {
+  background: var(--bg2);
+  padding: .7rem 1rem;
+  font-size: .71rem; text-transform: uppercase; letter-spacing: .09em;
+  color: var(--muted); font-weight: 600; text-align: left;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+.ku-table tbody tr { border-bottom: 1px solid var(--border); transition: background .15s; }
+.ku-table tbody tr:last-child { border-bottom: none; }
+.ku-table tbody tr:hover { background: var(--surface2); }
+.ku-table td { padding: .8rem 1rem; font-size: .88rem; vertical-align: middle; }
+.ku-table .empty-row td { text-align: center; padding: 2.5rem; color: var(--muted); }
+
+.emp-id { font-family: monospace; font-size: .78rem; color: var(--muted); }
+.emp-name { font-weight: 600; font-size: .9rem; }
+.emp-email { font-size: .78rem; color: var(--muted); margin-top: 1px; }
+.salary-cell { color: var(--success); font-weight: 600; }
+
+.badge {
+  display: inline-block;
+  font-size: .7rem; font-weight: 600;
+  padding: 2px 9px; border-radius: 99px;
+}
+.badge-dept { background: rgba(61,126,245,.15); color: #7fb0ff; border: 1px solid rgba(61,126,245,.25); }
+.badge-role { background: rgba(107,76,245,.15); color: #a98bf7; border: 1px solid rgba(107,76,245,.25); }
+.badge-admin { background: rgba(240,192,64,.12); color: #f0c040; border: 1px solid rgba(240,192,64,.25); }
+.badge-hr   { background: rgba(46,204,138,.12); color: #2ecc8a; border: 1px solid rgba(46,204,138,.25); }
+.badge-emp  { background: rgba(107,76,245,.15); color: #a98bf7; border: 1px solid rgba(107,76,245,.25); }
+
+/* ══ SEARCH ══ */
+.search-wrap { position: relative; }
+.search-wrap .s-icon { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; font-size: .9rem; }
+.search-wrap .form-control { padding-left: 2.1rem; min-width: 210px; }
+
+/* ══ DEPT BARS ══ */
+.dept-bars { padding: 1.2rem 1.4rem; }
+.dept-bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; font-size: .83rem; }
+.dept-bar-label { width: 100px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dept-bar-track { flex: 1; height: 7px; background: var(--bg2); border-radius: 99px; overflow: hidden; }
+.dept-bar-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--accent), var(--accent2)); transition: width .6s ease; }
+.dept-bar-count { width: 22px; text-align: right; font-weight: 600; }
+
+/* ══ PROFILE GRID ══ */
+.profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; }
+.profile-field { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: .8rem 1rem; }
+.profile-field-label { font-size: .68rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 3px; font-weight: 600; }
+.profile-field-val { font-size: .9rem; font-weight: 500; }
+
+/* ══ DASHBOARD GRID ══ */
+.dash-bottom { display: grid; grid-template-columns: 220px 1fr; gap: 1.2rem; align-items: start; }
+
+/* ══ ANIMATIONS ══ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.anim { animation: fadeUp .4s ease both; }
+.anim-1 { animation-delay: .06s; }
+.anim-2 { animation-delay: .12s; }
+.anim-3 { animation-delay: .18s; }
+
+/* ══ OVERLAY for mobile ══ */
+.sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 49; }
+.mobile-toggle { display: none; background: none; border: 1px solid var(--border); border-radius: var(--radius-xs); padding: .35rem .55rem; color: var(--text); cursor: pointer; font-size: 1rem; }
+
+@media (max-width: 860px) {
+  #sidebar { transform: translateX(-100%); }
+  #sidebar.open { transform: translateX(0); }
+  .sidebar-overlay { display: block; }
+  #main-wrap { margin-left: 0; }
+  .mobile-toggle { display: flex; }
+  .dash-bottom { grid-template-columns: 1fr; }
+  .form-grid-2 { grid-template-columns: 1fr; }
+  .page-content { padding: 1rem; }
+  .stats-grid { grid-template-columns: 1fr 1fr; }
+  .profile-grid { grid-template-columns: 1fr; }
+  .cred-grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 520px) {
+  .stats-grid { grid-template-columns: 1fr; }
+  .cred-grid { grid-template-columns: 1fr; }
+  .login-card { padding: 1.8rem 1.4rem; }
+}
+</style>
+</head>
+<body>
+
+<div id="app-root"></div>
+
+<script>
+// ════════════════════════════════════════════════════════
+//  KU EMPLOYEE PORTAL — IN-MEMORY FULL-STACK APP
+// ════════════════════════════════════════════════════════
+
+const DB = {
+  users: [
+    {id:1, username:'admin', password:'admin123', role:'admin', employee_id:null},
+    {id:2, username:'hr',    password:'hr123',    role:'hr',    employee_id:null},
+  ],
+  employees: [
+    {id:1, name:'Arjun Sharma',  email:'arjun@ku.com',   phone:'+91 98765 11001', department:'Engineering', role:'Senior Engineer',  salary:95000, joining_date:'2022-03-15'},
+    {id:2, name:'Priya Nair',    email:'priya@ku.com',   phone:'+91 98765 22002', department:'HR',          role:'HR Manager',       salary:72000, joining_date:'2021-07-01'},
+    {id:3, name:'Vikram Patel',  email:'vikram@ku.com',  phone:'+91 98765 33003', department:'Finance',     role:'Finance Analyst',  salary:68000, joining_date:'2023-01-10'},
+    {id:4, name:'Divya Menon',   email:'divya@ku.com',   phone:'+91 98765 44004', department:'Marketing',   role:'Marketing Lead',   salary:78000, joining_date:'2022-09-20'},
+    {id:5, name:'Karthik Rajan', email:'karthik@ku.com', phone:'+91 98765 55005', department:'Engineering', role:'DevOps Engineer',  salary:88000, joining_date:'2021-11-05'},
+    {id:6, name:'Sneha Iyer',    email:'sneha@ku.com',   phone:'+91 98765 66006', department:'Design',      role:'UI/UX Designer',   salary:74000, joining_date:'2023-04-18'},
+    {id:7, name:'Rahul Gupta',   email:'rahul@ku.com',   phone:'+91 98765 77007', department:'Sales',       role:'Sales Executive',  salary:62000, joining_date:'2022-06-30'},
+    {id:8, name:'Meena Krishnan',email:'meena@ku.com',   phone:'+91 98765 88008', department:'IT',          role:'IT Administrator', salary:70000, joining_date:'2023-07-12'},
+    {id:9, name:'Suresh Babu',   email:'suresh@ku.com',  phone:'+91 98765 99009', department:'Operations',  role:'Operations Head',  salary:82000, joining_date:'2020-05-20'},
+  ],
+  nextEmpId: 10,
+  nextUserId: 3
+};
+
+const DEPTS = ['Engineering','HR','Finance','Marketing','Operations','Sales','Design','Legal','IT','Management'];
+
+let session = null;
+let currentPage = 'login';
+let flashMsg = null;
+let searchQuery = '';
+let editEmpId = null;
+let pendingForm = {};
+
+// ── Helpers ──────────────────────────────────────────────
+function fmt(n) {
+  if (!n && n !== 0) return '—';
+  return '₹' + Number(n).toLocaleString('en-IN');
+}
+function esc(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function setFlash(msg, type='success') { flashMsg = {msg, type}; }
+function navigate(pg, extras={}) {
+  currentPage = pg;
+  if (extras.editId !== undefined) editEmpId = extras.editId;
+  if (pg !== 'add_employee') pendingForm = {};
+  render();
+}
+function canManage() { return session && (session.role==='admin'||session.role==='hr'); }
+function deptStats() {
+  const m = {};
+  DB.employees.forEach(e => { const d = e.department||'Unknown'; m[d] = (m[d]||0)+1; });
+  return Object.entries(m).sort((a,b) => b[1]-a[1]);
+}
+
+// ── Auth ─────────────────────────────────────────────────
+function doLogin(username, password) {
+  const u = DB.users.find(u => u.username===username && u.password===password);
+  if (!u) return false;
+  session = {...u};
+  return true;
+}
+
+// ── Render Entry ─────────────────────────────────────────
+function render() {
+  const root = document.getElementById('app-root');
+  if (!session) {
+    root.innerHTML = renderLoginPage();
+    bindLoginPage();
+  } else {
+    root.innerHTML = renderApp();
+    bindApp();
+  }
+}
+
+// ════════════════════════════════════════════════════════
+//  LOGIN PAGE
+// ════════════════════════════════════════════════════════
+function renderLoginPage() {
+  const f = flashMsg; flashMsg = null;
+  return `
+  <div id="login-page">
+    <div class="login-card">
+      <div class="login-logo-row">
+        <div class="logo-mark">K</div>
+        <div>
+          <div class="login-brand">KU</div>
+          <div class="login-tagline">Employee Portal</div>
+        </div>
+      </div>
+      <div class="login-heading">Welcome back</div>
+      <div class="login-sub">Sign in to manage your workforce</div>
+      ${f ? `<div class="flash-msg flash-${f.type}" style="margin-bottom:1.2rem">${f.type==='success'?'✓':'✕'} ${esc(f.msg)}</div>` : ''}
+      <div class="form-group" style="margin-bottom:.9rem">
+        <label class="form-label">Username</label>
+        <input id="l-user" type="text" class="form-control" placeholder="Enter username" autocomplete="username"/>
+      </div>
+      <div class="form-group" style="margin-bottom:1.3rem">
+        <label class="form-label">Password</label>
+        <input id="l-pass" type="password" class="form-control" placeholder="Enter password" autocomplete="current-password"/>
+      </div>
+      <button id="login-btn" class="btn-primary" style="width:100%;padding:.8rem;font-size:.95rem">Sign In →</button>
+
+      <div class="cred-hint">
+        <div class="cred-label">Default credentials</div>
+        <div class="cred-grid">
+          <div class="cred-box"><div class="cred-role">Admin</div><div class="cred-val">admin / admin123</div></div>
+          <div class="cred-box"><div class="cred-role">HR</div><div class="cred-val">hr / hr123</div></div>
+          <div class="cred-box"><div class="cred-role">Employee</div><div class="cred-val">Create in admin</div></div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function bindLoginPage() {
+  const btn = document.getElementById('login-btn');
+  const doIt = () => {
+    const u = document.getElementById('l-user').value.trim();
+    const p = document.getElementById('l-pass').value;
+    if (!doLogin(u, p)) { setFlash('Invalid username or password.', 'danger'); render(); return; }
+    flashMsg = null;
+    navigate('dashboard');
+  };
+  btn.addEventListener('click', doIt);
+  document.getElementById('l-pass').addEventListener('keydown', e => { if(e.key==='Enter') doIt(); });
+  document.getElementById('l-user').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('l-pass').focus(); });
+}
+
+// ════════════════════════════════════════════════════════
+//  APP SHELL
+// ════════════════════════════════════════════════════════
+function renderApp() {
+  const pageTitles = {
+    dashboard:'Dashboard', employees:'Employees',
+    add_employee:'Add Employee', edit_employee:'Edit Employee',
+    users:'User Accounts', add_user:'Add User'
+  };
+  const f = flashMsg; flashMsg = null;
+
+  return `
+  <div class="sidebar-overlay" id="sb-overlay" style="display:none" onclick="closeSidebar()"></div>
+  <aside id="sidebar">
+    <div class="sb-head">
+      <div class="sb-logo-mark">K</div>
+      <div>
+        <div class="sb-brand">KU</div>
+        <div class="sb-role-badge">${esc(session.role)}</div>
+      </div>
+    </div>
+    <nav class="sb-nav">
+      <div class="nav-section">Main</div>
+      ${navItem('⬡','Dashboard','dashboard')}
+      ${navItem('◈','Employees','employees')}
+      ${canManage() ? `<div class="nav-section" style="margin-top:8px">Actions</div>${navItem('+','Add Employee','add_employee')}` : ''}
+      ${session.role==='admin' ? `<div class="nav-section" style="margin-top:8px">Admin</div>${navItem('◎','User Accounts','users')}${navItem('+','Add User','add_user')}` : ''}
+    </nav>
+    <div class="sb-foot">
+      <div class="user-pill">
+        <div class="u-avatar">${esc(session.username[0].toUpperCase())}</div>
+        <div>
+          <div class="u-name">${esc(session.username)}</div>
+          <div class="u-role">${esc(session.role)}</div>
+        </div>
+      </div>
+      <button class="btn-logout" id="logout-btn">⏻ Logout</button>
+    </div>
+  </aside>
+
+  <div id="main-wrap">
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:10px">
+        <button class="mobile-toggle" onclick="toggleSidebar()">☰</button>
+        <div class="topbar-left">
+          <div class="page-heading">${pageTitles[currentPage]||currentPage}</div>
+          <div class="page-sub">KU Employee Management Portal</div>
+        </div>
+      </div>
+      <div id="topbar-actions">
+        ${currentPage==='employees' && canManage() ? `<button class="btn-primary" style="font-size:.83rem;padding:.5rem 1rem" onclick="navigate('add_employee')">+ Add Employee</button>` : ''}
+        ${currentPage==='users' && session.role==='admin' ? `<button class="btn-primary" style="font-size:.83rem;padding:.5rem 1rem" onclick="navigate('add_user')">+ Add User</button>` : ''}
+      </div>
+    </header>
+    <main class="page-content">
+      ${f ? `<div class="flash-msg flash-${f.type} anim">${f.type==='success'?'✓':f.type==='danger'?'✕':f.type==='info'?'ℹ':'⚠'} ${esc(f.msg)}</div>` : ''}
+      ${renderPage()}
+    </main>
+  </div>`;
+}
+
+function navItem(icon, label, pg) {
+  return `<div class="nav-item ${currentPage===pg?'active':''}" onclick="navigate('${pg}')"><span class="nav-icon">${icon}</span>${label}</div>`;
+}
+
+function toggleSidebar() {
+  const sb = document.getElementById('sidebar');
+  const ov = document.getElementById('sb-overlay');
+  sb.classList.toggle('open');
+  ov.style.display = sb.classList.contains('open') ? 'block' : 'none';
+}
+window.closeSidebar = function() {
+  const sb = document.getElementById('sidebar');
+  const ov = document.getElementById('sb-overlay');
+  sb.classList.remove('open');
+  ov.style.display = 'none';
+};
+
+// ════════════════════════════════════════════════════════
+//  PAGES
+// ════════════════════════════════════════════════════════
+function renderPage() {
+  switch(currentPage) {
+    case 'dashboard':     return renderDashboard();
+    case 'employees':     return renderEmployees();
+    case 'add_employee':  return renderAddEmployee();
+    case 'edit_employee': return renderEditEmployee();
+    case 'users':         return renderUsers();
+    case 'add_user':      return renderAddUser();
+    default: return '<p>Page not found.</p>';
+  }
+}
+
+// ── Dashboard ─────────────────────────────────────────────
+function renderDashboard() {
+  if (session.role === 'employee') {
+    const emp = DB.employees.find(e => e.id===session.employee_id);
+    if (!emp) return `<div class="card anim" style="padding:2rem;color:var(--muted)">No employee record is linked to your account. Contact your admin.</div>`;
+    const fields = [['Name',emp.name],['Email',emp.email],['Phone',emp.phone||'—'],['Department',emp.department||'—'],['Designation',emp.role||'—'],['Salary',fmt(emp.salary)],['Employee ID','#'+emp.id],['Joined',emp.joining_date||'—']];
+    return `
+    <div style="max-width:580px">
+      <div class="card anim" style="padding:1.8rem">
+        <div class="card-title" style="margin-bottom:1.2rem">My Profile</div>
+        <div class="profile-grid">
+          ${fields.map(([l,v]) => `<div class="profile-field"><div class="profile-field-label">${l}</div><div class="profile-field-val">${esc(v)}</div></div>`).join('')}
+        </div>
+      </div>
+    </div>`;
+  }
+
+  const depts = deptStats();
+  const maxCnt = depts.length ? Math.max(...depts.map(d=>d[1])) : 1;
+  const recent = DB.employees.slice().reverse().slice(0,5);
+
+  return `
+  <div class="stats-grid">
+    <div class="stat-card anim">
+      <div class="stat-icon">👥</div>
+      <div class="stat-value">${DB.employees.length}</div>
+      <div class="stat-label">Total Employees</div>
+    </div>
+    <div class="stat-card anim anim-1">
+      <div class="stat-icon">🏢</div>
+      <div class="stat-value">${depts.length}</div>
+      <div class="stat-label">Departments</div>
+    </div>
+    <div class="stat-card anim anim-2">
+      <div class="stat-icon">🔑</div>
+      <div class="stat-value">${DB.users.length}</div>
+      <div class="stat-label">System Users</div>
+    </div>
+    <div class="stat-card anim anim-3">
+      <div class="stat-icon">💰</div>
+      <div class="stat-value">${fmt(Math.round(DB.employees.reduce((a,e)=>a+(e.salary||0),0)/DB.employees.length))}</div>
+      <div class="stat-label">Avg Salary</div>
+    </div>
+  </div>
+
+  <div class="dash-bottom">
+    ${depts.length ? `
+    <div class="card anim anim-1">
+      <div class="card-head"><span class="card-title">By Department</span></div>
+      <div class="dept-bars">
+        ${depts.map(([d,c]) => `
+        <div class="dept-bar-row">
+          <div class="dept-bar-label" title="${esc(d)}">${esc(d)}</div>
+          <div class="dept-bar-track"><div class="dept-bar-fill" style="width:${Math.round(c/maxCnt*100)}%"></div></div>
+          <div class="dept-bar-count">${c}</div>
+        </div>`).join('')}
+      </div>
+    </div>` : ''}
+
+    <div class="card anim anim-2">
+      <div class="card-head">
+        <span class="card-title">Recent Employees</span>
+        <button class="btn-outline" onclick="navigate('employees')">View All</button>
+      </div>
+      <div class="table-wrap">
+        <table class="ku-table">
+          <thead><tr><th>#</th><th>Name</th><th>Department</th><th>Role</th><th>Joined</th></tr></thead>
+          <tbody>
+            ${recent.map(e => `<tr>
+              <td><span class="emp-id">#${e.id}</span></td>
+              <td><div class="emp-name">${esc(e.name)}</div><div class="emp-email">${esc(e.email)}</div></td>
+              <td><span class="badge badge-dept">${esc(e.department||'—')}</span></td>
+              <td>${esc(e.role||'—')}</td>
+              <td style="color:var(--muted);font-size:.82rem">${esc(e.joining_date||'—')}</td>
+            </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ── Employee List ─────────────────────────────────────────
+function renderEmployees() {
+  let emps = session.role==='employee'
+    ? DB.employees.filter(e => e.id===session.employee_id)
+    : DB.employees.filter(e => {
+        if (!searchQuery) return true;
+        const q = searchQuery.toLowerCase();
+        return (e.name+' '+e.email+' '+(e.department||'')+' '+(e.role||'')).toLowerCase().includes(q);
+      });
+
+  return `
+  <div class="card anim">
+    <div class="card-head">
+      <span class="card-title">All Employees <span class="card-muted">(${emps.length})</span></span>
+      ${canManage() ? `
+      <div class="search-wrap">
+        <span class="s-icon">⌕</span>
+        <input id="search-inp" type="text" class="form-control" placeholder="Search name, dept, role…" value="${esc(searchQuery)}" style="min-width:200px"/>
+      </div>` : ''}
+    </div>
+    <div class="table-wrap">
+      <table class="ku-table">
+        <thead>
+          <tr>
+            <th>ID</th><th>Name</th><th>Phone</th><th>Department</th>
+            <th>Role</th><th>Salary</th><th>Joined</th>
+            ${canManage() ? '<th>Actions</th>' : ''}
+          </tr>
+        </thead>
+        <tbody>
+          ${emps.length===0
+            ? `<tr class="empty-row"><td colspan="8">No employees found${searchQuery ? ` for "${esc(searchQuery)}"` : ''}.</td></tr>`
+            : emps.map(e => `<tr>
+                <td><span class="emp-id">#${e.id}</span></td>
+                <td><div class="emp-name">${esc(e.name)}</div><div class="emp-email">${esc(e.email)}</div></td>
+                <td style="color:var(--muted);font-size:.82rem">${esc(e.phone||'—')}</td>
+                <td><span class="badge badge-dept">${esc(e.department||'—')}</span></td>
+                <td><span class="badge badge-role">${esc(e.role||'—')}</span></td>
+                <td class="salary-cell">${fmt(e.salary)}</td>
+                <td style="color:var(--muted);font-size:.82rem">${esc(e.joining_date||'—')}</td>
+                ${canManage() ? `<td>
+                  <div style="display:flex;gap:5px;flex-wrap:nowrap">
+                    <button class="btn-edit-sm edit-btn" data-id="${e.id}">✎ Edit</button>
+                    ${session.role==='admin' ? `<button class="btn-danger-sm del-emp-btn" data-id="${e.id}">✕</button>` : ''}
+                  </div>
+                </td>` : ''}
+              </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>
+  </div>`;
+}
+
+// ── Add Employee ──────────────────────────────────────────
+function renderAddEmployee() {
+  const fd = pendingForm;
+  return `
+  <div class="form-card anim">
+    <div class="form-section-title">Personal Information</div>
+    <div class="form-grid-2">
+      <div class="form-group"><label class="form-label">Full Name *</label><input id="f-name" type="text" class="form-control" value="${esc(fd.name||'')}" placeholder="e.g. Rajan Kumar"/></div>
+      <div class="form-group"><label class="form-label">Email Address *</label><input id="f-email" type="email" class="form-control" value="${esc(fd.email||'')}" placeholder="e.g. rajan@ku.com"/></div>
+      <div class="form-group"><label class="form-label">Phone Number</label><input id="f-phone" type="text" class="form-control" value="${esc(fd.phone||'')}" placeholder="+91 98765 43210"/></div>
+      <div class="form-group"><label class="form-label">Joining Date</label><input id="f-date" type="date" class="form-control" value="${esc(fd.joining_date||'')}"/></div>
+    </div>
+    <div class="form-section-title">Job Details</div>
+    <div class="form-grid-2">
+      <div class="form-group"><label class="form-label">Department</label>
+        <select id="f-dept" class="form-select">
+          <option value="">— Select Department —</option>
+          ${DEPTS.map(d => `<option value="${d}" ${fd.department===d?'selected':''}>${d}</option>`).join('')}
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">Role / Designation</label><input id="f-role" type="text" class="form-control" value="${esc(fd.role||'')}" placeholder="e.g. Software Engineer"/></div>
+      <div class="form-group"><label class="form-label">Salary (₹)</label><input id="f-salary" type="number" class="form-control" value="${fd.salary||''}" placeholder="e.g. 75000" min="0" step="500"/></div>
+    </div>
+    <div class="form-actions">
+      <button class="btn-primary" id="save-emp-btn">+ Add Employee</button>
+      <button class="btn-secondary" onclick="navigate('employees')">Cancel</button>
+    </div>
+  </div>`;
+}
+
+// ── Edit Employee ─────────────────────────────────────────
+function renderEditEmployee() {
+  const e = DB.employees.find(e => e.id===editEmpId);
+  if (!e) return `<div class="form-card anim" style="color:var(--muted)">Employee not found.</div>`;
+  return `
+  <div class="form-card anim">
+    <div class="form-section-title">Personal Information</div>
+    <div class="form-grid-2">
+      <div class="form-group"><label class="form-label">Full Name *</label><input id="f-name" type="text" class="form-control" value="${esc(e.name)}"/></div>
+      <div class="form-group"><label class="form-label">Email Address *</label><input id="f-email" type="email" class="form-control" value="${esc(e.email)}"/></div>
+      <div class="form-group"><label class="form-label">Phone Number</label><input id="f-phone" type="text" class="form-control" value="${esc(e.phone||'')}"/></div>
+      <div class="form-group"><label class="form-label">Joining Date</label><input id="f-date" type="date" class="form-control" value="${esc(e.joining_date||'')}"/></div>
+    </div>
+    <div class="form-section-title">Job Details</div>
+    <div class="form-grid-2">
+      <div class="form-group"><label class="form-label">Department</label>
+        <select id="f-dept" class="form-select">
+          <option value="">— Select Department —</option>
+          ${DEPTS.map(d => `<option value="${d}" ${e.department===d?'selected':''}>${d}</option>`).join('')}
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">Role / Designation</label><input id="f-role" type="text" class="form-control" value="${esc(e.role||'')}"/></div>
+      <div class="form-group"><label class="form-label">Salary (₹)</label><input id="f-salary" type="number" class="form-control" value="${e.salary||''}" min="0" step="500"/></div>
+    </div>
+    <div class="form-actions">
+      <button class="btn-primary" id="update-emp-btn">✓ Save Changes</button>
+      <button class="btn-secondary" onclick="navigate('employees')">Cancel</button>
+    </div>
+  </div>`;
+}
+
+// ── Users ─────────────────────────────────────────────────
+function renderUsers() {
+  const badgeClass = r => r==='admin'?'badge-admin':r==='hr'?'badge-hr':'badge-emp';
+  return `
+  <div class="card anim">
+    <div class="card-head">
+      <span class="card-title">All Users <span class="card-muted">(${DB.users.length})</span></span>
+    </div>
+    <div class="table-wrap">
+      <table class="ku-table">
+        <thead><tr><th>ID</th><th>Username</th><th>Role</th><th>Linked Employee</th><th>Actions</th></tr></thead>
+        <tbody>
+          ${DB.users.map(u => {
+            const emp = u.employee_id ? DB.employees.find(e=>e.id===u.employee_id) : null;
+            return `<tr>
+              <td><span class="emp-id">#${u.id}</span></td>
+              <td><strong>${esc(u.username)}</strong></td>
+              <td><span class="badge ${badgeClass(u.role)}">${esc(u.role)}</span></td>
+              <td style="color:var(--muted);font-size:.82rem">${emp ? esc(emp.name)+' (#'+emp.id+')' : '—'}</td>
+              <td>${u.id===session.id
+                ? `<span style="font-size:.78rem;color:var(--muted)">Current session</span>`
+                : `<button class="btn-danger-sm del-user-btn" data-id="${u.id}">✕ Delete</button>`}
+              </td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>
+  </div>`;
+}
+
+// ── Add User ──────────────────────────────────────────────
+function renderAddUser() {
+  return `
+  <div class="form-card anim">
+    <div class="form-section-title">Account Details</div>
+    <div class="form-grid-2">
+      <div class="form-group"><label class="form-label">Username *</label><input id="u-name" type="text" class="form-control" placeholder="e.g. john_doe"/></div>
+      <div class="form-group"><label class="form-label">Password *</label><input id="u-pass" type="password" class="form-control" placeholder="Min 6 characters"/></div>
+      <div class="form-group"><label class="form-label">Role *</label>
+        <select id="u-role" class="form-select">
+          <option value="employee">Employee</option>
+          <option value="hr">HR</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">Link to Employee</label>
+        <select id="u-emp" class="form-select">
+          <option value="">— None —</option>
+          ${DB.employees.map(e => `<option value="${e.id}">${esc(e.name)} (#${e.id})</option>`).join('')}
+        </select>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn-primary" id="save-user-btn">+ Create User</button>
+      <button class="btn-secondary" onclick="navigate('users')">Cancel</button>
+    </div>
+  </div>`;
+}
+
+// ════════════════════════════════════════════════════════
+//  EVENT BINDING
+// ════════════════════════════════════════════════════════
+function bindApp() {
+  // Logout
+  document.getElementById('logout-btn')?.addEventListener('click', () => {
+    session = null; currentPage = 'login'; flashMsg = null; searchQuery = ''; render();
+  });
+
+  // Search
+  document.getElementById('search-inp')?.addEventListener('input', e => {
+    searchQuery = e.target.value; render();
+  });
+
+  // Edit buttons
+  document.querySelectorAll('.edit-btn').forEach(btn => {
+    btn.addEventListener('click', () => navigate('edit_employee', {editId: parseInt(btn.dataset.id)}));
+  });
+
+  // Delete employee
+  document.querySelectorAll('.del-emp-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = parseInt(btn.dataset.id);
+      const emp = DB.employees.find(e=>e.id===id);
+      if (!emp) return;
+      if (!confirm(`Delete employee "${emp.name}"? This cannot be undone.`)) return;
+      DB.employees = DB.employees.filter(e=>e.id!==id);
+      setFlash(`${emp.name} has been deleted.`, 'info');
+      navigate('employees');
+    });
+  });
+
+  // Save new employee
+  document.getElementById('save-emp-btn')?.addEventListener('click', () => {
+    const name  = document.getElementById('f-name').value.trim();
+    const email = document.getElementById('f-email').value.trim();
+    const phone = document.getElementById('f-phone').value.trim();
+    const dept  = document.getElementById('f-dept').value;
+    const role  = document.getElementById('f-role').value.trim();
+    const salary= parseFloat(document.getElementById('f-salary').value) || 0;
+    const date  = document.getElementById('f-date').value;
+
+    if (!name) { setFlash('Full name is required.', 'danger'); pendingForm={name,email,phone,department:dept,role,salary,joining_date:date}; render(); return; }
+    if (!email || !email.includes('@')) { setFlash('Valid email is required.', 'danger'); pendingForm={name,email,phone,department:dept,role,salary,joining_date:date}; render(); return; }
+    if (DB.employees.find(e=>e.email===email)) { setFlash('An employee with this email already exists.', 'danger'); pendingForm={name,email,phone,department:dept,role,salary,joining_date:date}; render(); return; }
+
+    DB.employees.push({id:DB.nextEmpId++, name, email, phone, department:dept, role, salary, joining_date:date});
+    setFlash(`${name} has been added successfully!`, 'success');
+    pendingForm = {};
+    navigate('employees');
+  });
+
+  // Update employee
+  document.getElementById('update-emp-btn')?.addEventListener('click', () => {
+    const emp = DB.employees.find(e=>e.id===editEmpId);
+    if (!emp) return;
+    const name  = document.getElementById('f-name').value.trim();
+    const email = document.getElementById('f-email').value.trim();
+    if (!name) { setFlash('Full name is required.', 'danger'); render(); return; }
+    if (!email || !email.includes('@')) { setFlash('Valid email is required.', 'danger'); render(); return; }
+    if (DB.employees.find(e=>e.email===email && e.id!==editEmpId)) { setFlash('Email already in use by another employee.', 'danger'); render(); return; }
+
+    emp.name         = name;
+    emp.email        = email;
+    emp.phone        = document.getElementById('f-phone').value.trim();
+    emp.department   = document.getElementById('f-dept').value;
+    emp.role         = document.getElementById('f-role').value.trim();
+    emp.salary       = parseFloat(document.getElementById('f-salary').value) || 0;
+    emp.joining_date = document.getElementById('f-date').value;
+
+    setFlash(`${name}'s details have been updated.`, 'success');
+    navigate('employees');
+  });
+
+  // Delete user
+  document.querySelectorAll('.del-user-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = parseInt(btn.dataset.id);
+      const u  = DB.users.find(u=>u.id===id);
+      if (!u) return;
+      if (u.id===session.id) { setFlash("You can't delete your own account.", 'warning'); render(); return; }
+      if (!confirm(`Delete user "${u.username}"?`)) return;
+      DB.users = DB.users.filter(u=>u.id!==id);
+      setFlash(`User "${u.username}" deleted.`, 'info');
+      navigate('users');
+    });
+  });
+
+  // Save new user
+  document.getElementById('save-user-btn')?.addEventListener('click', () => {
+    const uname = document.getElementById('u-name').value.trim();
+    const pass  = document.getElementById('u-pass').value;
+    const role  = document.getElementById('u-role').value;
+    const empId = document.getElementById('u-emp').value;
+
+    if (!uname) { setFlash('Username is required.', 'danger'); render(); return; }
+    if (!pass || pass.length < 6) { setFlash('Password must be at least 6 characters.', 'danger'); render(); return; }
+    if (DB.users.find(u=>u.username===uname)) { setFlash('Username already taken.', 'danger'); render(); return; }
+
+    DB.users.push({id:DB.nextUserId++, username:uname, password:pass, role, employee_id: empId ? parseInt(empId) : null});
+    setFlash(`User "${uname}" created successfully!`, 'success');
+    navigate('users');
+  });
+}
+
+// ── Boot ─────────────────────────────────────────────────
+window.navigate = navigate;
+window.toggleSidebar = toggleSidebar;
+render();
+</script>
+</body>
+</html>
