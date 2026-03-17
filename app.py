@@ -67,13 +67,18 @@ def dashboard():
     stats = {}
     if session['role'] in ('admin', 'hr'):
         stats['total'] = db.execute('SELECT COUNT(*) FROM employees').fetchone()[0]
-        stats['departments'] = db.execute('SELECT COUNT(DISTINCT department) FROM employees').fetchone()[0]
+        stats['departments'] = db.execute('SELECT COUNT(*) FROM departments').fetchone()[0]
         stats['users'] = db.execute('SELECT COUNT(*) FROM users').fetchone()[0]
-        dept_rows = db.execute('SELECT department, COUNT(*) as cnt FROM employees GROUP BY department').fetchall()
+        dept_rows = db.execute(
+            '''SELECT d.name as department, COUNT(e.id) as cnt
+               FROM departments d
+               LEFT JOIN employees e ON e.department = d.name
+               GROUP BY d.name
+               ORDER BY cnt DESC'''
+        ).fetchall()
         stats['dept_data'] = [dict(r) for r in dept_rows]
         recent = db.execute('SELECT * FROM employees ORDER BY id DESC LIMIT 5').fetchall()
     else:
-        # Employee: show only their own record
         emp_id = session.get('employee_id')
         recent = db.execute('SELECT * FROM employees WHERE id=?', (emp_id,)).fetchall() if emp_id else []
         stats['total'] = 1
@@ -109,6 +114,8 @@ def employees():
 @login_required
 @roles_required('admin', 'hr')
 def add_employee():
+    db = get_db()
+    departments = db.execute('SELECT name FROM departments ORDER BY name').fetchall()
     if request.method == 'POST':
         name = request.form['name'].strip()
         email = request.form['email'].strip()
@@ -117,7 +124,6 @@ def add_employee():
         role = request.form['role'].strip()
         salary = request.form['salary'].strip()
         joining_date = request.form['joining_date']
-        db = get_db()
         try:
             db.execute(
                 'INSERT INTO employees (name,email,phone,department,role,salary,joining_date) VALUES (?,?,?,?,?,?,?)',
@@ -130,7 +136,8 @@ def add_employee():
         finally:
             db.close()
         return redirect(url_for('employees'))
-    return render_template('add_employee.html')
+    db.close()
+    return render_template('add_employee.html', departments=departments)
 
 @app.route('/employees/edit/<int:emp_id>', methods=['GET', 'POST'])
 @login_required
@@ -138,6 +145,7 @@ def add_employee():
 def edit_employee(emp_id):
     db = get_db()
     emp = db.execute('SELECT * FROM employees WHERE id=?', (emp_id,)).fetchone()
+    departments = db.execute('SELECT name FROM departments ORDER BY name').fetchall()
     if not emp:
         db.close()
         flash('Employee not found.', 'danger')
@@ -163,7 +171,7 @@ def edit_employee(emp_id):
             db.close()
         return redirect(url_for('employees'))
     db.close()
-    return render_template('edit_employee.html', emp=emp)
+    return render_template('edit_employee.html', emp=emp, departments=departments)
 
 @app.route('/employees/delete/<int:emp_id>', methods=['POST'])
 @login_required
@@ -175,6 +183,91 @@ def delete_employee(emp_id):
     db.close()
     flash('Employee deleted.', 'info')
     return redirect(url_for('employees'))
+
+# ── Departments ───────────────────────────────────────────────────────────────
+
+@app.route('/departments')
+@login_required
+def departments():
+    db = get_db()
+    rows = db.execute(
+        '''SELECT d.*, COUNT(e.id) as emp_count
+           FROM departments d
+           LEFT JOIN employees e ON e.department = d.name
+           GROUP BY d.id
+           ORDER BY d.name'''
+    ).fetchall()
+    db.close()
+    return render_template('departments.html', departments=rows)
+
+@app.route('/departments/add', methods=['GET', 'POST'])
+@login_required
+@roles_required('admin', 'hr')
+def add_department():
+    if request.method == 'POST':
+        name = request.form['name'].strip()
+        description = request.form.get('description', '').strip()
+        head = request.form.get('head', '').strip()
+        db = get_db()
+        try:
+            db.execute(
+                'INSERT INTO departments (name, description, head) VALUES (?,?,?)',
+                (name, description, head)
+            )
+            db.commit()
+            flash('Department added successfully!', 'success')
+        except Exception as e:
+            flash(f'Error: {e}', 'danger')
+        finally:
+            db.close()
+        return redirect(url_for('departments'))
+    return render_template('add_department.html')
+
+@app.route('/departments/edit/<int:dept_id>', methods=['GET', 'POST'])
+@login_required
+@roles_required('admin', 'hr')
+def edit_department(dept_id):
+    db = get_db()
+    dept = db.execute('SELECT * FROM departments WHERE id=?', (dept_id,)).fetchone()
+    if not dept:
+        db.close()
+        flash('Department not found.', 'danger')
+        return redirect(url_for('departments'))
+    if request.method == 'POST':
+        name = request.form['name'].strip()
+        description = request.form.get('description', '').strip()
+        head = request.form.get('head', '').strip()
+        try:
+            old_name = dept['name']
+            db.execute(
+                'UPDATE departments SET name=?, description=?, head=? WHERE id=?',
+                (name, description, head, dept_id)
+            )
+            # Update employees that belong to this department
+            if old_name != name:
+                db.execute('UPDATE employees SET department=? WHERE department=?', (name, old_name))
+            db.commit()
+            flash('Department updated successfully!', 'success')
+        except Exception as e:
+            flash(f'Error: {e}', 'danger')
+        finally:
+            db.close()
+        return redirect(url_for('departments'))
+    db.close()
+    return render_template('edit_department.html', dept=dept)
+
+@app.route('/departments/delete/<int:dept_id>', methods=['POST'])
+@login_required
+@roles_required('admin')
+def delete_department(dept_id):
+    db = get_db()
+    dept = db.execute('SELECT * FROM departments WHERE id=?', (dept_id,)).fetchone()
+    if dept:
+        db.execute('DELETE FROM departments WHERE id=?', (dept_id,))
+        db.commit()
+        flash(f'Department "{dept["name"]}" deleted.', 'info')
+    db.close()
+    return redirect(url_for('departments'))
 
 # ── User Management (Admin only) ─────────────────────────────────────────────
 
@@ -234,4 +327,5 @@ def delete_user(user_id):
 
 if __name__ == '__main__':
     init_db()
-    app.run(debug=True, port=5050)
+    app.run(debug=True, host='0.0.0.0', port=5000)
+
