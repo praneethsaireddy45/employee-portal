@@ -36,6 +36,15 @@ def init_db():
         )
     ''')
 
+    c.execute('''
+        CREATE TABLE IF NOT EXISTS departments (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT UNIQUE NOT NULL,
+            description TEXT,
+            head TEXT
+        )
+    ''')
+
     # Seed default admin if not exists
     c.execute("SELECT id FROM users WHERE username='admin'")
     if not c.fetchone():
@@ -47,5 +56,21 @@ def init_db():
         c.execute("INSERT INTO users (username, password, role) VALUES (?,?,?)",
                   ('hr', generate_password_hash('hr123'), 'hr'))
 
+    # Seed default departments if none exist
+    c.execute("SELECT COUNT(*) FROM departments")
+    if c.fetchone()[0] == 0:
+        default_depts = [
+            ('Engineering', 'Software and hardware development', ''),
+            ('HR', 'Human resources and talent management', ''),
+            ('Finance', 'Financial planning and accounting', ''),
+            ('Marketing', 'Brand and marketing operations', ''),
+            ('Operations', 'Business operations and logistics', ''),
+        ]
+        c.executemany(
+            "INSERT INTO departments (name, description, head) VALUES (?,?,?)",
+            default_depts
+        )
+
     conn.commit()
     conn.close()
+
